@@ -67,7 +67,7 @@ ExpressOAuthServer.prototype.authenticate = function(options) {
  * (See: https://tools.ietf.org/html/rfc6749#section-3.1)
  */
 
-ExpressOAuthServer.prototype.authorize = function(options) {
+ExpressOAuthServer.prototype.authorize = function(options, responseHandler = handleResponse, errorHandler = handleError) {
   var that = this;
 
   return function(req, res, next) {
@@ -85,10 +85,10 @@ ExpressOAuthServer.prototype.authorize = function(options) {
         }
       })
       .then(function() {
-        return handleResponse.call(this, req, res, response);
+        return responseHandler.call(this, req, res, response);
       })
       .catch(function(e) {
-        return handleError.call(this, e, req, res, response, next);
+        return errorHandler.call(this, e, req, res, response, next);
       });
   };
 };
@@ -101,7 +101,7 @@ ExpressOAuthServer.prototype.authorize = function(options) {
  * (See: https://tools.ietf.org/html/rfc6749#section-3.2)
  */
 
-ExpressOAuthServer.prototype.token = function(options) {
+ExpressOAuthServer.prototype.token = function(options, responseHandler = handleResponse, errorHandler = handleError) {
   var that = this;
 
   return function(req, res, next) {
@@ -119,10 +119,10 @@ ExpressOAuthServer.prototype.token = function(options) {
         }
       })
       .then(function() {
-        return handleResponse.call(this, req, res, response);
+        return responseHandler.call(this, req, res, response);
       })
       .catch(function(e) {
-        return handleError.call(this, e, req, res, response, next);
+        return errorHandler.call(this, e, req, res, response, next);
       });
   };
 };
